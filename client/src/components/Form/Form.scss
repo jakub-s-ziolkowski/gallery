@@ -1,0 +1,61 @@
+
+@import '../../assets/styles/colors.scss';
+
+.signForm {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    padding: 40px 30px;
+    background-color: lighten($backgroundColor, 1%);
+    border-radius: .2rem;
+    box-shadow: 3px 3px 15px darken($backgroundColor, 5%);
+
+    &__frame {
+
+        display: flex;
+        height: 120px;
+        flex-direction: column;
+        justify-content: space-around
+    }
+
+    &__input {
+
+        padding: 0 15px;
+        border: 1px solid lighten($backgroundColor, 15%);
+        border-radius: 2.5px;
+        box-shadow: 1px 1px 5px lighten($backgroundColor, 25%) inset;
+
+        line-height: 30px;
+        font-size: 1.1rem;
+        letter-spacing: .05rem;
+
+        &:last-of-type { margin-bottom: 0; }
+    }
+
+    &__button {
+
+        width: 60%;
+        background-color: $foregroundColor;
+        margin: 30px 0;
+
+        line-height: 30px;
+        font-size: 1.2rem;
+        color: $fontColor;
+        letter-spacing: .1rem;
+        border-radius: 2.5px;
+        box-shadow: 3px 3px 10px darken($backgroundColor, 10%);
+
+        cursor: pointer;
+    }
+
+    &__trigger {
+
+        line-height: 30px;
+        background-color: inherit;
+
+        text-shadow: 1px 1px 2.5px darken($backgroundColor, 25%)
+    }
+}

@@ -1,0 +1,31 @@
+
+@import '../../assets/styles/colors.scss';
+
+header {
+
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    top: 0;
+    height: 80px;
+    width: 100%;
+    background-color: $backgroundColor;
+    box-shadow: 0 3px 15px darken($backgroundColor, 10%);
+    z-index: 1;
+}
+
+nav {
+
+    display: flex;
+    height: 80px;
+    padding: 0 1.5rem;
+}
+
+a {
+
+    color: $fontColor;
+    text-decoration: none;
+    line-height: 80px;
+    padding: 0 1.5rem;
+    letter-spacing: .075rem;
+}

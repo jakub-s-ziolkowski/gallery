@@ -1,0 +1,14 @@
+[
+    {
+        "owner": "user1",
+        "name": "gallery1"
+    },
+    {
+        "owner": "user1",
+        "name": "gallery2"
+    },
+    {
+        "owner": "user2",
+        "name": "gallery3"
+    }
+]
