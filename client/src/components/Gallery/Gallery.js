@@ -65,8 +65,7 @@ export default function Gallery ({showConfig}) {
         fetch(`/galleries/${selectedGallery}`, {
 
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' }})
-                .then(res => res.json());
+            headers: { 'Content-Type': 'application/json' }});
     };
 
     return (

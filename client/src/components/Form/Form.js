@@ -26,7 +26,8 @@ export default function Form ({ isExtended }) {
 
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)});
+            body: JSON.stringify(formData)})
+            .then(res => { if (res.ok) console.log(res); });
     };
 
     return (
