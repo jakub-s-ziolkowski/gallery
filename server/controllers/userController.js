@@ -10,17 +10,21 @@ export const createUser = async (req, res) => {
     try {
 
         if (req.body['new-password'] !== req.body['repeat-new-password'])
-            throw Error('Pass diff')
+            throw Error({ code: 401, message: 'Passwords doesnt match' });
 
         const username = req.body['username'];
         const password = req.body['new-password'];
+
+        const exists = await User.findOne({ username: username });
+
+        if (exists) throw Error({ code: 400, message: 'User already exists' });
 
         const user = new User({ username, password });
 
         await user.save();
         res.status(201).send();
 
-    } catch (error) { res.status(400).send(error) }
+    } catch (error) { res.status(error.code ? error.code : 400).send(error.message); }
 };
 
 export const authUser = async (req, res) => {
@@ -28,35 +32,39 @@ export const authUser = async (req, res) => {
     const username = req.body['username'];
     const password = req.body['current-password'];
 
-    const user = await User.findOne({ username: username });
+    try {
 
-    if (!user) return res.status(404).send({ message: 'User not found' });
+        const user = await User.findOne({ username: username });
 
-    if (user.password === password) {
+        if (!user) throw Error({ code: 404, message: 'User not found' });
 
-        jwt.sign({ user }, SECRET_KEY, { expiresIn: '1h' }, (error, token) => {
+        if (user.password === password) {
 
-            if (error) return res.status(404).send({ message: 'Token error' });
+            jwt.sign({ user }, SECRET_KEY, { expiresIn: '1h' }, (error, token) => {
 
-            else res.status(200).send({ token });
-        });
+                if (error) throw Error({ code: 500, message: 'Token error' });
+
+                else res.status(200).send({ token });
+            });
+        }
+
+        else throw Error({ code: 401, message: 'Invalid password' });
     }
 
-    else return res.status(401).send({ message: 'Invalid password' });
-
+    catch (error) { res.status(error.code ? error.code : 400).send(error.message); }
 };
 
 export const getToken = async (req, res) => {
 
     const token = req.headers['authorization'];
 
-    if (!token) return res.status(401);
-
     try {
+
+        if (!token) throw Error({ code: 401, message: 'Invalid token' });
 
         const decoded = jwt.verify(token, SECRET_KEY);
         res.json({ user: decoded });
     }
 
-    catch { res.status(401); }
+    catch (error) { res.status(error.code ? error.code : 400).send(error.message); }
 };
