@@ -10,7 +10,7 @@ export const createGallery = async (req, res) => {
 
         const exists = await Gallery.findOne({ name: name });
 
-        if (exists) throw Error({ code: 400, message: 'Gallery already exists' })
+        if (exists) throw Error('Gallery already exists')
 
         const gallery = new Gallery({ owner, name });
 
@@ -18,7 +18,7 @@ export const createGallery = async (req, res) => {
         res.status(201).send();
     }
 
-    catch (error) { res.status(error.code ? error.code : 400).send(error.message); }
+    catch (error) { res.status(400).json(error.message); }
 };
 
 export const getGalleries = async (req, res) => {
@@ -31,7 +31,7 @@ export const getGalleries = async (req, res) => {
         res.send(galleries);
     }
 
-    catch (error) { res.status(error.code ? error.code : 400).send(error.message); }
+    catch (error) { res.status(400).json(error.message); }
 };
 
 export const removeGallery = async (req, res) => {
@@ -42,14 +42,14 @@ export const removeGallery = async (req, res) => {
 
         const image = await Image.findOne({ gallery: name });
 
-        if (image) throw Error({ code: 400, message: 'Not empty gallery'});
+        if (image) throw Error('Not empty gallery');
 
         const deletedGallery = await Gallery.findOneAndDelete({ name: name });
 
-        if (!deletedGallery) throw Error({ code: 404, message: 'Gallery not found'});
+        if (!deletedGallery) throw Error('Gallery not found');
 
         res.status(200).send();
     }
 
-    catch (error) { res.status(error.code ? error.code : 400).send(error.message); }
+    catch (error) { res.status(400).json(error.message); }
 };

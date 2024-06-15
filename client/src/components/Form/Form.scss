@@ -13,12 +13,22 @@
     border-radius: .2rem;
     box-shadow: 3px 3px 15px darken($backgroundColor, 5%);
 
-    &__frame {
+    &__box {
 
         display: flex;
         height: 120px;
         flex-direction: column;
-        justify-content: space-around
+        justify-content: space-around;
+
+        &--extended { height: 180px; }
+    }
+
+    &__frame {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: auto;
     }
 
     &__input {
@@ -35,11 +45,28 @@
         &:last-of-type { margin-bottom: 0; }
     }
 
+    &__error {
+
+        height: 0;
+        line-height: 30px;
+        letter-spacing: .5px;
+        color: $errorColor;
+        opacity: 0;
+
+        transition: height .5s, opacity .5s;
+
+        &--visible {
+
+            height: 20px;
+            opacity: 1;
+        }
+    }
+
     &__button {
 
         width: 60%;
         background-color: $foregroundColor;
-        margin: 30px 0;
+        margin-top: 30px;
 
         line-height: 30px;
         font-size: 1.2rem;
@@ -53,6 +80,7 @@
 
     &__trigger {
 
+        margin-top: 20px;
         line-height: 30px;
         background-color: inherit;
 

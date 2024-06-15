@@ -1,6 +1,7 @@
 
 'use strict';
 
+import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import express from 'express';
 import path from 'path';
@@ -19,7 +20,8 @@ mongoose.connect('mongodb://localhost:27017/GalleryDB')
 
 app.use(express.static(path.join(dirname, '../client/build/')))
 
-app.use(express.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 app.use('/users', userRoutes);
 app.use('/images', imageRoutes);

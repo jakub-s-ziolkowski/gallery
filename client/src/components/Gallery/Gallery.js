@@ -1,97 +1,81 @@
 
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+
+import Config from '../Config/Config.js';
+import Image from '../Image/Image.js';
 
 import './Gallery.scss';
 
-export default function Gallery ({showConfig}) {
+export default function Gallery ({ isAuthorized, showConfig }) {
 
-    const [popup, setPopup] = useState({state: false, source: undefined, description: undefined});
+    const navigate = useNavigate();
+
+    useEffect(() => {if (showConfig && !isAuthorized) navigate('/')});
+
+    const [ popup, setPopup ] = useState({state: false, source: undefined, description: undefined});
 
     const openPopup = image => setPopup({state: true, source: image.source, description: image.description});
-    const closePopup = () => setPopup({state: false, source: undefined, description: undefined});
-
-    const [images, setImages] = useState([]);
-    const [galleries, setGalleries] = useState([]);
-    const [selectedGallery, selectGallery] = useState(undefined);
-
-    const setGallery = event => selectGallery(event.target.value);
-
-    const username = 'user1';
 
     const location = useLocation();
 
-    useEffect(() => {
+    useEffect(() =>
+        setPopup({state: false, source: undefined, description: undefined}
+    ), [location]);
 
-        fetch(`/galleries/${showConfig ? username : ''}`)
-            .then(res => res.json())
-            .then(data => {
+    const [ images, setImages ] = useState([]);
+    const [ selectedGallery, selectGallery ] = useState(undefined);
 
-                setGalleries(data);
-                selectGallery(showConfig ? data[0].name : 'all');
-            });
+    const [ change, registerChange ] = useState(0);
 
-    }, [location, showConfig]);
+    const requestGallery = gallery => {
 
-    useEffect(() => {
+        if (selectedGallery) {
 
-        let galleryRequest = '';
+            let galleryRequest = '';
 
-        if (selectedGallery && selectedGallery !== 'all')
-            galleryRequest = selectedGallery;
+            if (selectedGallery !== 'all')
+                galleryRequest = selectedGallery;
 
-        fetch(`/images/${galleryRequest}`)
-            .then(res => res.json())
-            .then(data => setImages(data));
+            fetch(`/images/${gallery ? gallery : galleryRequest}`)
+                .then(res => res.json())
+                .then(data => setImages(data))
+                    .catch(error => {});
+        }
 
-    }, [selectedGallery]);
-
-    const [newGallery, setNewGallery] = useState('');
-
-    const setNewGalleryName = event => setNewGallery(event.target.value);
-
-    const handleCreate = async event => {
-
-        if (newGallery.length > 2)
-            fetch('/galleries', {
-
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({owner: 'user1', name: newGallery})});
+        else setImages([]);
     };
 
-    const handleRemove = async event => {
+    useEffect(requestGallery, [selectedGallery]);
 
-        fetch(`/galleries/${selectedGallery}`, {
+    const fileInput = useRef(undefined);
 
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' }});
-    };
+    const handleFileUpload = () => fileInput.current.click();
+
+    const [ file, setFile ] = useState();
+
+    const handleFileChange = event => setFile(event.target.files[0]);
+
+    useEffect(() => {
+
+        const data = new FormData();
+
+        data.append('owner', isAuthorized);
+        data.append('gallery', selectedGallery);
+        data.append('file', file);
+
+        fetch('/images', {
+
+            method: 'POST',
+            body: data})
+            .then(res => { if (res.ok) requestGallery(selectedGallery); })
+                .catch(error => {});
+    }, [file]);
 
     return (
 
         <>
-            <form className = "galleryForm">
-                <div>
-                    <label htmlFor = "gallerySelect" className = "galleryForm__label">Gallery:</label>
-                    <select name = "galleries" id = "gallerySelect" className = "galleryForm__list" title = "Select gallery" value = {selectedGallery} onChange = {setGallery}>
-                        {!showConfig &&
-                            <option value = "all">All</option>}
-                        {galleries.map((gallery, index) =>
-                            <option value = {gallery.name} key = {index}>{gallery.name}</option>
-                        )}
-                    </select>
-                </div>
-                {showConfig &&
-                <>
-                    <hr className = "galleryForm__separator"/>
-                    <div className = "galleryForm__frame">
-                        <input type = "text" className = "galleryForm__input" title = "Enter gallery name" placeholder = "Gallery name" value = {newGallery} onChange = {setNewGalleryName}/>
-                        <button type = "button" className = "galleryForm__button" onClick = {handleCreate}>Create gallery</button>
-                    </div>
-                    <button type = "button" className = "galleryForm__button removeButton" onClick = {handleRemove}>Remove gallery</button>
-                </>}
-            </form>
+            <Config username = { isAuthorized } showConfig = { showConfig } selectedGallery = { selectedGallery } selectGallery = { selectGallery } change = { change } registerChange = { registerChange }/>
 
             <section className = "gallery">
                 {images.map((image, index) =>
@@ -99,19 +83,14 @@ export default function Gallery ({showConfig}) {
                         <img src = {image.source} alt = {image.description} onClick = {() => openPopup(image)}/>
                     </figure>
                 )}
+                {isAuthorized && location.pathname === '/gallery' && selectedGallery !== '' &&
+                <div className = "gallery__figure">
+                    <button className = "gallery__placeholder" onClick = { handleFileUpload }>+</button>
+                    <input type = "file" ref = { fileInput } onChange = { handleFileChange }/>
+                </div>}
             </section>
 
-            {popup.state &&
-            <section className = "popup">
-                <figure className = "popup__figure">
-                    <img src = {popup.source} alt = {popup.description}/>
-                    <form className = "popup__form">
-                        <button type = "button" className = "popup__button" onClick = {closePopup}>X</button>
-                        <button type = "button" className = "popup__button" onClick = {closePopup}>M</button>
-                        <button type = "button" className = "popup__button" onClick = {closePopup}>D</button>
-                    </form>
-                </figure>
-            </section>}
+            {popup.state && <Image setImages = { setImages } isAuthorized = { isAuthorized } selectedGallery = { selectedGallery } popup = { popup } setPopup = { setPopup }/>}
         </>
     );
 };

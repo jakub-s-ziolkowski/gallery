@@ -2,7 +2,8 @@
 
 - logowanie i rejestracja nowych użytkowników
 - przeglądanie obrazów i galerii dodanych przez użytkowników
-- zarządzanie galeriami
+- dodawanie i usuwanie nowych galerii
+- dodawanie i usuwanie obrazów
 
 # Wykorzystane technologie
 
@@ -16,12 +17,14 @@
 - express: ^4.19.2,
 - jsonwebtoken: ^9.0.2
 - mongoose: ^8.4.1
+- body-parser: ^1.20.2
+- multer: ^1.4.5-lts.1
 - react: ^18.3.1
 - react-dom: ^18.3.1
 - react-router-dom: ^6.23.1
 - react-scripts: 5.0.1
 - sass": ^1.77.4
-- web-vitals": ^2.1.4
+- web-vitals: ^2.1.4
 
 # Opis interfejsu
 
@@ -37,6 +40,8 @@
 - (POST) **/users/auth** - autentykacja tokenem
 - (GET) **/images/** - pobranie wszystkich obrazów z bazy
 - (GET) **/images/:gallery** - pobranie obrazów z danej galerii
+- (POST) **/images/** - dodanie obrazu do bazy
+- (DELETE) **/images/** - usunięcie danego obrazu z bazy
 - (POST) **/galleries** - dodanie galerii do bazy
 - (GET) **/galleries** - pobranie galerii z bazy
 - (GET) **/galleries/:username** - pobranie galerii danego użytkownika
@@ -69,3 +74,18 @@ cd server
 npm install
 npm start
 ```
+
+# Testowanie aplikacji
+
+Aby zaimportować przykładowe dane do bazy korzystamy z komendy:
+```bash
+mongorestore --archive="data/GalleryDB"
+```
+
+Istniejący użytkownicy:
+
+Username: **user1**
+Password: **qwerty**
+
+Username: **user2**
+Password: **asdfg**

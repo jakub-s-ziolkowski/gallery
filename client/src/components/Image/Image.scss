@@ -1,0 +1,48 @@
+
+@import '../../assets/styles/colors.scss';
+
+@media (orientation: portrait) { .popup__figure, .popup__figure img { width: 100%; } }
+@media (orientation: landscape) { .popup__figure, .popup__figure img { height: 100%; } }
+
+.popup {
+
+    position: fixed;
+    top: 80px;
+    display: flex;
+    height: calc(100% - 80px);
+    width: 100vw;
+    background-color: transparentize(darken($backgroundColor, 50%), .5);
+
+    &__figure {
+
+        position: relative;
+        display: flex;
+        margin: auto;
+        padding: 10vmin;
+
+        img {
+
+            border: 1px solid darken($backgroundColor, 50%);
+            box-shadow: 10px 10px 20px 5px darken($backgroundColor, 15%);
+            user-select: none;
+        }
+    }
+
+    &__form {
+
+        position: absolute;
+        top: calc(10vmin + 15px);
+        right: calc(10vmin + 15px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__button {
+
+        height: 30px;
+        width: 30px;
+        border-radius: 30px;
+        margin-bottom: 7.5px;
+        cursor: pointer;
+    }
+}

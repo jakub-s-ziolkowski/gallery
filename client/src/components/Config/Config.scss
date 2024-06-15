@@ -1,0 +1,92 @@
+
+@import '../../assets/styles/colors.scss';
+
+.galleryForm {
+
+    display: flex;
+    flex-direction: column;
+    margin: 15px 40px 0 40px;
+    padding: 30px 0 40px 0;
+    border-bottom: solid $foregroundColor;
+
+    &__label {
+
+        line-height: 20px;
+        letter-spacing: .1rem;
+    }
+
+    &__list {
+
+        margin-left: 10px;
+        height: 20px;
+        width: 100px;
+        background-color: lighten($backgroundColor, 10%);
+        box-shadow: 1px 1px 5px lighten($backgroundColor, 25%);
+        color: $fontColor;
+    }
+
+    &__separator {
+
+        height: 1px;
+        margin-top: 30px;
+        background-color: lighten($backgroundColor, 25%);
+    }
+
+    &__box {
+
+        display: flex;
+        flex-direction: column;
+        margin: 30px auto 30px 0;
+        padding: 15px;
+        border: 1px solid lighten($backgroundColor, 25%);
+        border-radius: 5px;
+    }
+
+    &__input {
+
+        width: 140px;
+        padding: 0 5px;
+        margin-bottom: 15px;
+        line-height: 25px;
+        box-shadow: 1px 1px 5px lighten($backgroundColor, 25%);
+    }
+
+    &__frame {
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: auto;
+
+        &--indent { margin: 0 auto 0 15px; }
+    }
+
+    &__button {
+
+        width: 140px;
+        padding: 5px 15px;
+        background-color: lighten($backgroundColor, 10%);
+        box-shadow: 1px 1px 5px lighten($backgroundColor, 25%);
+        line-height: 20px;
+        letter-spacing: .05rem;
+        color: $fontColor;
+        cursor: pointer;
+    }
+
+    &__error {
+
+        height: 0;
+        line-height: 30px;
+        letter-spacing: .5px;
+        color: $errorColor;
+        opacity: 0;
+
+        transition: height .5s, opacity .5s;
+
+        &--visible {
+
+            height: 20px;
+            opacity: 1;
+        }
+    }
+}
